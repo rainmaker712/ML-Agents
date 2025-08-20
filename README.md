@@ -7,7 +7,8 @@ PDF 논문을 업로드하거나 URL을 입력하면 AI가 자동으로 요약�
 - **PDF 파일 업로드**: 로컬 PDF 파일을 업로드하여 요약 생성
 - **PDF URL 입력**: PDF URL을 입력하여 요약 생성
 - **AI 기반 요약**: LLM을 활용한 구조화된 논문 요약
-- **커스텀 프롬프트**: `app/paper_prompt.md` 파일을 통한 프롬프트 커스터마이징
+- **자동 제목 추출**: PDF에서 논문 제목을 자동으로 추출하여 파일명 생성
+- **커스텀 프롬프트**: `prompts/paper_prompt.md` 파일을 통한 프롬프트 커스터마이징
 - **다양한 인터페이스**: Streamlit 웹 인터페이스 및 명령줄 도구 제공
 
 ## 🚀 설치 및 실행
@@ -61,7 +62,7 @@ python -m app.summarize_and_post <PDF 파일 경로 또는 PDF 링크>
 
 **예시:**
 ```bash
-python -m app.summarize_and_post app/original_paper/upcycling.pdf
+python -m app.summarize_and_post papers/emu3.pdf
 ```
 
 ## 📁 프로젝트 구조
@@ -74,14 +75,14 @@ ML-Agents/
 │   ├── prompt_loader.py    # 프롬프트 로더 유틸리티
 │   ├── streamlit_app.py    # Streamlit 웹 인터페이스
 │   ├── summarize_and_post.py # 명령줄 도구
-│   ├── paper_prompt.md     # 논문 요약 프롬프트
-│   ├── requirements.txt    # Python 의존성
 │   ├── core/               # 핵심 비즈니스 로직
 │   │   ├── __init__.py
 │   │   ├── config.py       # 설정 관리
 │   │   └── services.py     # PDF 처리 및 요약 서비스
 │   ├── summaries/          # 생성된 요약 파일 저장소
 │   └── original_paper/     # 원본 논문 파일
+├── prompts/                # 프롬프트 파일들
+│   └── paper_prompt.md     # 논문 요약 프롬프트
 ├── requirements.txt        # Python 의존성
 ├── README.md               # 프로젝트 문서
 └── .gitignore              # Git 무시 파일
@@ -89,7 +90,20 @@ ML-Agents/
 
 ## 📝 프롬프트 커스터마이징
 
-`app/paper_prompt.md` 파일을 수정하여 요약 생성 프롬프트를 커스터마이징할 수 있습니다. 파일이 없거나 로드할 수 없는 경우 기본 프롬프트가 사용됩니다.
+`prompts/paper_prompt.md` 파일을 수정하여 요약 생성 프롬프트를 커스터마이징할 수 있습니다. 파일이 없거나 로드할 수 없는 경우 기본 프롬프트가 사용됩니다.
+
+## 🏷️ 자동 파일명 생성
+
+요약 파일은 논문의 제목을 자동으로 추출하여 간단한 파일명으로 저장됩니다:
+
+- **특수문자 제거**: 파일명에서 사용할 수 없는 특수문자들을 자동으로 제거
+- **공백 처리**: 공백과 하이픈을 언더스코어(`_`)로 변환
+- **길이 제한**: 파일명이 너무 길어지지 않도록 80자 이내로 제한
+- **기본값 제공**: 제목 추출에 실패할 경우 `Unknown_Paper.md`로 저장
+
+**예시:**
+- 원본 제목: "Janus: Decoupling Visual Encoding for Unified Vision-Language Modeling"
+- 생성된 파일명: `Janus_Decoupling_Visual_Encoding_for_Unified.md`
 
 ## 🤝 기여하기
 

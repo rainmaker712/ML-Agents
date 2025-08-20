@@ -21,8 +21,8 @@ class Settings:
     LOCAL_LLM_TEMPERATURE = float(os.getenv("LOCAL_LLM_TEMPERATURE", "1.0"))
 
     # Application settings
-    SUMMARIES_DIR = "app/summaries"
-    PROMPT_FILE = "app/paper_prompt.md"
+    SUMMARIES_DIR = "summaries"
+    PROMPT_FILE = "prompts/paper_prompt.md"
     MAX_PROMPT_LENGTH = 16000
 
 settings = Settings()
