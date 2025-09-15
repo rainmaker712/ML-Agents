@@ -29,11 +29,20 @@ class LLMClient:
             raise ValueError("OPENAI_API_KEY가 설정되지 않았습니다.")
 
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.model_config = {
-            "model": settings.OPENAI_MODEL,
-            "max_tokens": settings.OPENAI_MAX_TOKENS,
-            "temperature": settings.OPENAI_TEMPERATURE,
-        }
+        
+        # GPT-5 모델은 max_completion_tokens를 사용, 다른 모델은 max_tokens를 사용
+        if "gpt-5" in settings.OPENAI_MODEL.lower():
+            self.model_config = {
+                "model": settings.OPENAI_MODEL,
+                "max_completion_tokens": settings.OPENAI_MAX_COMPLETION_TOKENS,
+                "temperature": settings.OPENAI_TEMPERATURE,
+            }
+        else:
+            self.model_config = {
+                "model": settings.OPENAI_MODEL,
+                "max_tokens": settings.OPENAI_MAX_TOKENS,
+                "temperature": settings.OPENAI_TEMPERATURE,
+            }
 
     def _init_local_client(self):
         """로컬 LLM 클라이언트 초기화"""
@@ -49,7 +58,7 @@ class LLMClient:
 
         self.model_config = {
             "model": settings.LOCAL_LLM_MODEL,
-            "max_tokens": settings.LOCAL_LLM_MAX_TOKENS,
+            "max_completion_tokens": settings.LOCAL_LLM_MAX_TOKENS,
             "temperature": settings.LOCAL_LLM_TEMPERATURE,
         }
 
@@ -84,14 +93,19 @@ class LLMClient:
         response = self.create_chat_completion(
             [{"role": "user", "content": prompt}]
         )
-        return response.choices[0].message.content.strip()
+        
+        content = response.choices[0].message.content
+        if content is None:
+            raise Exception("LLM 응답이 비어있습니다.")
+        
+        return content.strip()
 
     def get_provider_info(self) -> Dict[str, str]:
         """현재 사용 중인 LLM 제공자 정보 반환"""
         info = {
             "provider": self.provider,
             "model": self.model_config.get("model"),
-            "max_tokens": str(self.model_config.get("max_tokens")),
+            "max_completion_tokens": str(self.model_config.get("max_tokens")),
             "temperature": str(self.model_config.get("temperature")),
         }
         if self.provider == "local":

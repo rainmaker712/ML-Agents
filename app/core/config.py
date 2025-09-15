@@ -10,7 +10,10 @@ class Settings:
     # OpenAI settings
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+    
+    # GPT-5 모델 호환성을 위한 설정
     OPENAI_MAX_TOKENS = int(os.getenv("OPENAI_MAX_TOKENS", "3200"))
+    OPENAI_MAX_COMPLETION_TOKENS = int(os.getenv("OPENAI_MAX_COMPLETION_TOKENS", "3200"))
     OPENAI_TEMPERATURE = float(os.getenv("OPENAI_TEMPERATURE", "0.7"))
     
     # Local LLM settings

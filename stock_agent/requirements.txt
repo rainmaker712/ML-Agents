@@ -1,0 +1,16 @@
+streamlit
+yfinance
+alpha-vantage
+requests
+python-dotenv
+plotly
+scikit-learn
+openai
+sqlalchemy
+# sqlite3
+beautifulsoup4
+feedparser
+ta
+scipy
+matplotlib
+seaborn

@@ -32,6 +32,13 @@ export LLM_PROVIDER=openai
 
 # OpenAI API 키 설정
 export OPENAI_API_KEY="your_openai_api_key_here"
+
+# 모델 설정 (GPT-4o 권장)
+export OPENAI_MODEL="gpt-4o"
+
+# 토큰 및 온도 설정
+export OPENAI_MAX_TOKENS=3200
+export OPENAI_TEMPERATURE=0.7
 ```
 
 #### 로컬 LLM 서버 사용
@@ -43,6 +50,21 @@ export LLM_PROVIDER=local
 export LOCAL_LLM_BASE_URL="http://localhost:8000/v1"
 export LOCAL_LLM_API_KEY="your_token"
 export LOCAL_LLM_MODEL="your_model_path"
+
+# 토큰 및 온도 설정
+export LOCAL_LLM_MAX_TOKENS=4000
+export LOCAL_LLM_TEMPERATURE=1.0
+```
+
+#### .env 파일 사용 (권장)
+프로젝트 루트에 `.env` 파일을 생성하고 위의 환경 변수들을 설정할 수 있습니다:
+```bash
+# .env 파일 예시
+LLM_PROVIDER=openai
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-4o
+OPENAI_MAX_TOKENS=3200
+OPENAI_TEMPERATURE=0.7
 ```
 
 ### 3. 실행 방법
@@ -62,7 +84,11 @@ python -m app.summarize_and_post <PDF 파일 경로 또는 PDF 링크>
 
 **예시:**
 ```bash
-python -m app.summarize_and_post papers/emu3.pdf
+# 로컬 PDF 파일 처리
+python -m app.summarize_and_post papers/Janus.pdf
+
+# PDF URL 처리
+python -m app.summarize_and_post "https://arxiv.org/pdf/2401.12345.pdf"
 ```
 
 ## 📁 프로젝트 구조
@@ -112,6 +138,46 @@ ML-Agents/
 3. 변경사항을 커밋하세요 (`git commit -m 'Add some amazing feature'`)
 4. 브랜치에 푸시하세요 (`git push origin feature/amazing-feature`)
 5. Pull Request를 생성하세요
+
+## 🚨 문제 해결
+
+### OpenAI API 관련 오류
+
+#### 1. 할당량 초과 오류 (429)
+```
+Error code: 429 - You exceeded your current quota
+```
+**해결 방법:**
+- OpenAI 계정의 사용량 및 결제 상태를 확인하세요
+- 새로운 API 키를 생성하거나 결제 정보를 업데이트하세요
+
+#### 2. 모델 호환성 오류 (400)
+```
+Error code: 400 - Unsupported parameter: 'max_tokens' is not supported with this model
+```
+**해결 방법:**
+- GPT-5 모델을 사용하는 경우 `max_completion_tokens`를 사용합니다
+- GPT-4o 등 다른 모델을 사용하는 경우 `max_tokens`를 사용합니다
+- 환경 변수에서 올바른 모델명을 설정하세요
+
+#### 3. API 키 오류
+```
+OPENAI_API_KEY가 설정되지 않았습니다
+```
+**해결 방법:**
+- 환경 변수 `OPENAI_API_KEY`를 설정하세요
+- `.env` 파일에 API 키를 추가하세요
+- 터미널에서 `export OPENAI_API_KEY="your_key"` 명령을 실행하세요
+
+### 로컬 LLM 관련 오류
+
+#### 1. 연결 오류
+```
+로컬 LLM 설정이 완전하지 않습니다
+```
+**해결 방법:**
+- `LOCAL_LLM_BASE_URL`과 `LOCAL_LLM_MODEL` 환경 변수를 설정하세요
+- 로컬 LLM 서버가 실행 중인지 확인하세요
 
 ## 📄 라이선스
 

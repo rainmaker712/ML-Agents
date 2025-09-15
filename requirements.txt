@@ -2,4 +2,4 @@ pdfplumber
 openai>=1.0.0
 requests
 streamlit
-python-dotenv 
+python-dotenv
